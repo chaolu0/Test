@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/back" />
+    <TextView
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/register_name"
+        android:textSize="20dp"
+        android:textColor="#000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+    <android.support.constraint.Guideline
+        android:id="@+id/right_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="346dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/left_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="38dp" />
+    <EditText
+        android:inputType="textEmailAddress"
+        android:textSize="16dp"
+        android:id="@+id/email"
+        android:background="@null"
+        android:hint="请输入邮箱"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="60dp"
+        app:layout_constraintRight_toLeftOf="@+id/right_line"
+        app:layout_constraintLeft_toLeftOf="@+id/left_line" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/data_item_button_color"
+        app:layout_constraintLeft_toLeftOf="@+id/left_line"
+        app:layout_constraintRight_toRightOf="@+id/right_line"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <EditText
+        android:textSize="16dp"
+        android:inputType="text"
+        android:id="@+id/password"
+        android:background="@null"
+        android:hint="请输入密码"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toTopOf="@+id/email"
+        android:layout_marginTop="60dp"
+        app:layout_constraintRight_toLeftOf="@+id/right_line"
+        app:layout_constraintLeft_toLeftOf="@+id/left_line" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/data_item_button_color"
+        app:layout_constraintLeft_toLeftOf="@+id/left_line"
+        app:layout_constraintRight_toRightOf="@+id/right_line"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/selector_lar_button_disable"
+        android:text="@string/register_name"
+        android:textColor="#fff"
+        app:layout_constraintLeft_toLeftOf="@id/left_line"
+        app:layout_constraintRight_toRightOf="@+id/right_line"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="@string/register_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/register"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

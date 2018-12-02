@@ -4,4 +4,5 @@
     <string name="login_email_hint">请输入邮箱</string>
     <string name="login_password_hint">请输入密码</string>
     <string name="login_name">登录</string>
+    <string name="register_right">注册即表示同意《隐私权说明》</string>
 </resources>
