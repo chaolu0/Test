@@ -3,7 +3,9 @@ package com.shxy.datasharedplatform;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,10 @@ import android.view.ViewGroup;
  */
 
 public class DataFragment extends Fragment {
+
+    private RecyclerView mRecyclerView;
+    private FloatingActionButton mRefreshButton;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -35,7 +41,14 @@ public class DataFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        System.out.println("onViewCreated");
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRefreshButton = view.findViewById(R.id.floating_action_button);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     @Override
