@@ -3,14 +3,24 @@ package com.shxy.datasharedplatform;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.Arrays;
+import com.google.gson.Gson;
+import com.shxy.datasharedplatform.bean.BaseMsg;
+import com.shxy.datasharedplatform.utils.OkHttpUtils;
+import com.shxy.datasharedplatform.controller.SubmitButtonController;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by shxy on 2018/12/2.
@@ -18,58 +28,23 @@ import java.util.Arrays;
 
 public class LoginActivity extends BaseActivity implements
         View.OnClickListener {
-
-
-    private Button loginButton;
     private EditText usernameEdit;
     private EditText passwordEdit;
-    private boolean[] isOk = new boolean[2];
+    private ProgressBar progressBar;
+    private Button loginButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Arrays.fill(isOk, false);
+
         loginButton = (Button) findViewById(R.id.login);
         loginButton.setOnClickListener(this);
-        setLoginButtonBackground();
         loginButton.setEnabled(false);
         usernameEdit = (EditText) findViewById(R.id.email);
         passwordEdit = (EditText) findViewById(R.id.password);
-        usernameEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                isOk[0] = !(s.length() == 0);
-                setLoginButtonBackground();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        passwordEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                isOk[1] = !(s.length() == 0);
-                setLoginButtonBackground();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        progressBar = (ProgressBar) findViewById(R.id.progressbar);
+        new SubmitButtonController(this, loginButton, passwordEdit, usernameEdit);
         findViewById(R.id.go_to_register).setOnClickListener(this);
     }
 
@@ -77,17 +52,60 @@ public class LoginActivity extends BaseActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login:
-                Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
+                sendLoginHttp();
                 break;
             case R.id.go_to_register:
-                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+                startActivityForResult(new Intent(LoginActivity.this, RegisterActivity.class), 1);
+//                finish();
                 break;
         }
     }
 
-    private void setLoginButtonBackground() {
-        loginButton.setBackground(isOk[0] && isOk[1] ?
-                getDrawable(R.drawable.selector_lar_button) :
-                getDrawable(R.drawable.selector_lar_button_disable));
+    private void sendLoginHttp() {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", usernameEdit.getText().toString());
+        map.put("password", passwordEdit.getText().toString());
+        progressBar.setVisibility(View.VISIBLE);
+        loginButton.setEnabled(false);
+        OkHttpUtils.basePostAsync("login", map, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        loginButton.setEnabled(true);
+                        Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final BaseMsg baseMsg = new Gson().fromJson(response.body().string(), BaseMsg.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        loginButton.setEnabled(true);
+                        if (baseMsg.getState() == 1) {
+
+                        } else {
+                            Toast.makeText(LoginActivity.this, baseMsg.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == 1) {
+            usernameEdit.setText(data.getExtras().getString("email"));
+            passwordEdit.setText(data.getExtras().getString("password"));
+        }
     }
 }
