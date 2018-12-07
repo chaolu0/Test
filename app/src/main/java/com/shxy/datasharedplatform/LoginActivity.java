@@ -90,6 +90,8 @@ public class LoginActivity extends BaseActivity implements
                         progressBar.setVisibility(View.GONE);
                         loginButton.setEnabled(true);
                         if (baseMsg.getState() == 1) {
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
 
                         } else {
                             Toast.makeText(LoginActivity.this, baseMsg.getMsg(), Toast.LENGTH_SHORT).show();
