@@ -13,7 +13,6 @@ public class InformationBean {
 
     private String photo_path;
 
-    private String title;
 
     private String content;
 
@@ -57,13 +56,6 @@ public class InformationBean {
         this.photo_path = photo_path;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getContent() {
         return content;

@@ -5,6 +5,9 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="data_item_button_color">#919191</color>
+    <color name="item_divider_color">#ededed</color><!--item分割线颜色-->
     <color name="bottom_tab_normal_color">#383838</color><!--第一页下面按钮正常颜色-->
-    <color name="bottom_tab_normal_selected_color">#70deff</color><!--第一页下面按钮选中颜色-->
+    <color name="bottom_tab_normal_selected_color">#0C9EFF</color><!--第一页下面按钮选中颜色-->
+    <color name="refresh_tip_background_color">#4dd0e1</color><!--刷新提示框的背景颜色-->
+    <color name="float_action_button_background">#fafafa</color><!--浮动按钮背景颜色-->
 </resources>

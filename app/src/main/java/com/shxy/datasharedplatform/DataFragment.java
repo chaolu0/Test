@@ -2,9 +2,12 @@ package com.shxy.datasharedplatform;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,14 +19,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.shxy.datasharedplatform.bean.InformationRecv;
 import com.shxy.datasharedplatform.bean.InformationBean;
+import com.shxy.datasharedplatform.bean.InformationRecv;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,8 +41,11 @@ public class DataFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton mRefreshButton;
-    private RecyclerView.Adapter mAdapter;
+    private DataAdapter mAdapter;
     private List<InformationBean> mData = new ArrayList<>();
+    private SwipeRefreshLayout mRefreshLayout;
+    private int page = 0;
+    private TextView tip;
 
     @Override
     public void onAttach(Context context) {
@@ -64,6 +71,8 @@ public class DataFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRefreshButton = view.findViewById(R.id.floating_action_button);
+        mRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+        tip = view.findViewById(R.id.tip);
     }
 
     @Override
@@ -72,37 +81,63 @@ public class DataFragment extends Fragment {
         mAdapter = new DataAdapter(getContext(), mData);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchItems();
+            }
+        });
+        mRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecyclerView.scrollToPosition(0);
+                fetchItems();
+            }
+        });
+        fetchItems();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        OkHttpUtils.baseGetAsync("fetch_items", Collections.<String, String>emptyMap(),
-                new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+    }
 
-                    }
-
+    private void fetchItems() {
+        Map<String, String> map = new HashMap<>();
+        map.put("page", page + "");
+        page++;
+        OkHttpUtils.baseGetAsync("fetch_items", map, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                page--;
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String s = response.body().string();
-                        InformationRecv recv = new Gson().fromJson(s, InformationRecv.class);
-                        mData.addAll(recv.getData());
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
+                    public void run() {
+                        mRefreshLayout.setRefreshing(false);
+                        Toast.makeText(getActivity(), "网络错误", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String s = response.body().string();
+                InformationRecv recv = new Gson().fromJson(s, InformationRecv.class);
+                final int newSize = recv.getData().size();//新获取到的数据，用于显示tip
+                recv.getData().addAll(mData);//交换，让新数据显示在上面
+                mData = recv.getData();
+                mAdapter.setmData(mData);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setTip(newSize);
+                        mRefreshLayout.setRefreshing(false);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -121,6 +156,7 @@ public class DataFragment extends Fragment {
     public void onStop() {
         super.onStop();
         System.out.println("onStop");
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -139,6 +175,25 @@ public class DataFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         System.out.println("onDetach");
+    }
+
+    private static final int MSG_TIP_HIDE = 0x01;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == MSG_TIP_HIDE)
+                tip.setVisibility(View.GONE);
+        }
+    };
+
+    private void setTip(int n) {
+        tip.setVisibility(View.VISIBLE);
+        if (n == 0) {
+            tip.setText("暂时没有新帖");
+        } else {
+            tip.setText("获取" + n + "个新帖");
+        }
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TIP_HIDE), 2000);
     }
 
     public static class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -177,8 +232,8 @@ public class DataFragment extends Fragment {
                         .into(holderType1.photoVIew);
                 holderType1.nicknameView.setText(bean.getNickname());
                 holderType1.contentView.setText(bean.getContent());
-                holderType1.comment_countView.setText(bean.getComment_count()+"");
-                holderType1.up_countView.setText(bean.getUp_count()+"");
+                holderType1.comment_countView.setText(bean.getComment_count() + "");
+                holderType1.up_countView.setText(bean.getUp_count() + "");
 //                holderType1.titleView.setText(bean.getNickname());
 
             }
