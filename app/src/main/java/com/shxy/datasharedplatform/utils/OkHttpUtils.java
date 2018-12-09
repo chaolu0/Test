@@ -4,8 +4,10 @@ import java.util.Map;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by shxy on 2018/12/4.
@@ -43,4 +45,5 @@ public class OkHttpUtils {
         OkHttpClient client = new OkHttpClient();
         client.newCall(request).enqueue(callback);
     }
+
 }
