@@ -1,6 +1,7 @@
 package com.shxy.datasharedplatform;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.shxy.datasharedplatform.bean.BaseMsg;
+import com.shxy.datasharedplatform.message.BaseMsg;
+import com.shxy.datasharedplatform.message.LoginMessage;
+import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.shxy.datasharedplatform.controller.SubmitButtonController;
 
@@ -82,24 +85,31 @@ public class LoginActivity extends BaseActivity implements
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final BaseMsg baseMsg = new Gson().fromJson(response.body().string(), BaseMsg.class);
+                final LoginMessage loginMessage = new Gson().fromJson(response.body().string(), LoginMessage.class);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         progressBar.setVisibility(View.GONE);
                         loginButton.setEnabled(true);
-                        if (baseMsg.getState() == 1) {
+                        if (loginMessage.getState() == 1) {
+                            saveInfo(loginMessage);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
 
                         } else {
-                            Toast.makeText(LoginActivity.this, baseMsg.getMsg(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, loginMessage.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
+    }
+
+    private void saveInfo(LoginMessage loginMessage) {
+        SharedPreferences.Editor edit = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).edit();
+        edit.putString("uid",loginMessage.getId()+"");
+        edit.apply();
     }
 
     @Override

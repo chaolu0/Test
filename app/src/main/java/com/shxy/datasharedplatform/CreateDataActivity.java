@@ -16,12 +16,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.shxy.datasharedplatform.utils.MainConfig;
+import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 /**
  * Created by shxy on 2018/12/8.
@@ -73,7 +86,59 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
 
     private void sendData() {
 
+        String id = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString("uid", "");
+        String url = null;
+        Map<String, String> params = new HashMap<>();
+        params.put("content", mContent.getText().toString());
+        params.put("id", id);
+        if (mData.size() > 0) {
+            params.put("count", mData.size() + "");
+            Map<String, File> fileParams = new HashMap<>();
+            for (int i = 0; i < mData.size(); i++) {
+                try {
+                    fileParams.put("img" + i, new File(new URI(mData.get(i).toString())));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+            url = "upload_item_type2";
+            params.put("type", "1");
+            OkHttpUtils.filePostAsync(url, params, fileParams, callback);
+        } else {
+            url = "upload_item";
+            params.put("type", "2");
+            OkHttpUtils.basePostAsync(url, params, callback);
+        }
+
     }
+
+    private Callback callback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(CreateDataActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
+        @Override
+        public void onResponse(Call call, final Response response) throws IOException {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Toast.makeText(CreateDataActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }
+    };
 
     private static final int REQUEST_CODE_CHOOSE = 1;
 
@@ -96,7 +161,8 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             List<Uri> mSelected = Matisse.obtainResult(data);
             Toast.makeText(this, mSelected.size() + "", Toast.LENGTH_SHORT).show();
-            mAdapter.setmList(mSelected);
+            mData = mSelected;
+            mAdapter.setmList(mData);
             mAdapter.notifyDataSetChanged();
         }
     }
