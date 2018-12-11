@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.shxy.datasharedplatform.utils.FileUtils;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.zhihu.matisse.Matisse;
@@ -95,18 +96,14 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
             params.put("count", mData.size() + "");
             Map<String, File> fileParams = new HashMap<>();
             for (int i = 0; i < mData.size(); i++) {
-                try {
-                    fileParams.put("img" + i, new File(new URI(mData.get(i).toString())));
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+                fileParams.put("img" + i, FileUtils.getFileByUri(mData.get(i), this));
             }
             url = "upload_item_type2";
-            params.put("type", "1");
+            params.put("type", "2");
             OkHttpUtils.filePostAsync(url, params, fileParams, callback);
         } else {
             url = "upload_item";
-            params.put("type", "2");
+            params.put("type", "1");
             OkHttpUtils.basePostAsync(url, params, callback);
         }
 

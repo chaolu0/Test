@@ -11,12 +11,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+import static com.shxy.datasharedplatform.utils.MainConfig.MAIN_URL;
+
 /**
  * Created by shxy on 2018/12/4.
  */
 
 public class OkHttpUtils {
-    private static final String baseUrl = "http://183.175.11.154:8080/";
+    private static final String baseUrl = MAIN_URL;
 
     public static void basePostAsync(String url, Map<String, String> params, Callback callback) {
         FormBody.Builder builder = new FormBody.Builder();
@@ -24,9 +26,10 @@ public class OkHttpUtils {
             builder.add(entry.getKey(), entry.getValue());
         }
         String realUrl = baseUrl + url;
+        FormBody body = builder.build();
         Request request = new Request.Builder()
                 .url(realUrl)
-                .post(builder.build())
+                .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient();
         client.newCall(request).enqueue(callback);
@@ -50,16 +53,19 @@ public class OkHttpUtils {
 
     public static void filePostAsync(String url, Map<String, String> params,
                                      Map<String, File> fileParams, Callback callback) {
-        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            mBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+//            mBuilder = mBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+            mBuilder.addFormDataPart(entry.getKey(),entry.getValue());
         }
-        String TYPE = "application/octet-stream";
+//        String TYPE = "application/octet-stream";
         for (Map.Entry<String, File> entry : fileParams.entrySet()) {
-            RequestBody body = RequestBody.create(MediaType.parse(TYPE), entry.getValue());
-            mBuilder.addFormDataPart("img", entry.getKey(), body);
+            RequestBody body = RequestBody.create(MediaType.parse("image/png"), entry.getValue());
+            mBuilder.addFormDataPart("img", entry.getValue().getName(), body);
         }
-        MultipartBody body = mBuilder.build();
+
+        RequestBody body = mBuilder.build();
         String realUrl = baseUrl + url;
         Request request = new Request.Builder()
                 .url(realUrl)

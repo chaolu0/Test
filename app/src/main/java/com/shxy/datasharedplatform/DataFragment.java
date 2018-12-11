@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.shxy.datasharedplatform.bean.InformationBean;
 import com.shxy.datasharedplatform.bean.InformationRecv;
+import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 
 import java.io.IOException;
@@ -228,7 +229,7 @@ public class DataFragment extends Fragment {
             if (getItemViewType(position) == 1) {
                 DataViewHolderType1 holderType1 = (DataViewHolderType1) holder;
                 Glide.with(mContext)
-                        .load(bean.getPhoto_path())
+                        .load(MainConfig.MAIN_URL + bean.getPhoto_path())
                         .into(holderType1.photoVIew);
                 holderType1.nicknameView.setText(bean.getNickname());
                 holderType1.contentView.setText(bean.getContent());
