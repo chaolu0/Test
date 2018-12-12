@@ -1,4 +1,4 @@
-package com.shxy.datasharedplatform.bean;
+package com.shxy.datasharedplatform.message;
 
 import java.sql.Date;
 
@@ -23,6 +23,15 @@ public class InformationBean {
     private String up_time;
 
     private Integer type;
+    private String images;
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public Integer getId() {
         return id;

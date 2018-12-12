@@ -1,6 +1,4 @@
-package com.shxy.datasharedplatform.bean;
-
-import com.shxy.datasharedplatform.message.BaseMsg;
+package com.shxy.datasharedplatform.message;
 
 import java.util.List;
 
