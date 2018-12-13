@@ -10,5 +10,5 @@ import android.content.SharedPreferences;
 public class MainConfig {
 
     public static final String MAIN_SP_FILE = "sp_main";
-    public static final String MAIN_URL = "http://172.23.113.1:8080/";
+    public static final String MAIN_URL = "http://172.30.129.1:8080/";
 }

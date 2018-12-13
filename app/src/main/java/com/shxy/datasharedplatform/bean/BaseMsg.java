@@ -1,4 +1,4 @@
-package com.shxy.datasharedplatform.message;
+package com.shxy.datasharedplatform.bean;
 
 /**
  * Created by shxy on 2018/12/4.

@@ -11,8 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.shxy.datasharedplatform.message.BaseMsg;
-import com.shxy.datasharedplatform.message.LoginMessage;
+import com.shxy.datasharedplatform.bean.LoginMessage;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.shxy.datasharedplatform.controller.SubmitButtonController;

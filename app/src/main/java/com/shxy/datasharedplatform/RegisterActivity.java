@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.shxy.datasharedplatform.message.BaseMsg;
+import com.shxy.datasharedplatform.bean.BaseMsg;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.shxy.datasharedplatform.controller.SubmitButtonController;
 import com.shxy.datasharedplatform.utils.RegularExpressionUtils;

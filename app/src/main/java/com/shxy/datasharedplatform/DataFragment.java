@@ -2,6 +2,7 @@ package com.shxy.datasharedplatform;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,9 +22,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.shxy.datasharedplatform.message.InformationBean;
-import com.shxy.datasharedplatform.message.InformationRecv;
-import com.shxy.datasharedplatform.message.RemarkMessage;
+import com.shxy.datasharedplatform.bean.InformationBean;
+import com.shxy.datasharedplatform.bean.InformationRecv;
+import com.shxy.datasharedplatform.bean.RemarkMessage;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 
@@ -222,7 +223,7 @@ public class DataFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            View view = inflater.inflate(R.layout.data_item_type2, parent, false);
+            View view = inflater.inflate(R.layout.item_data_type2, parent, false);
             DataViewHolderType1 viewHolder = new DataViewHolderType1(view);
             return viewHolder;
         }
@@ -257,6 +258,10 @@ public class DataFragment extends Fragment {
                     holderType1.downView.setTag(R.id.postion, position);
                     holderType1.downView.setTag(R.id.view_holder, holderType1);
                     holderType1.downView.setOnClickListener(listener);
+
+                    holderType1.commentView.setTag(R.id.postion, position);
+                    holderType1.commentView.setOnClickListener(listener);
+
                     holderType1.recyclerView.setLayoutManager(manager);
 //                    holderType1.recyclerView.addItemDecoration(new RecyclerItemDecoration(10, files.length));
                     holderType1.recyclerView.setAdapter(new Image9Adapter(mContext, Arrays.asList(files)));
@@ -277,14 +282,15 @@ public class DataFragment extends Fragment {
             public void onClick(View v) {
 
                 switch (v.getId()) {
-
                     case R.id.up:
                         sendItemUp(1, v);
                         break;
                     case R.id.down:
                         sendItemUp(0, v);
                         break;
-
+                    case R.id.comment:
+                        startComment(v);
+                        break;
                 }
             }
 
@@ -336,7 +342,16 @@ public class DataFragment extends Fragment {
                 tv.setText((old + up) + "");
             }
 
+            private void startComment(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("item_id", (Integer) v.getTag(R.id.postion));
+                Intent intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtras(bundle);
+                ((Activity) mContext).startActivityForResult(intent, 1);
+            }
         }
+
+
     }
 
     public static class DataViewHolderType1 extends RecyclerView.ViewHolder {
@@ -350,6 +365,7 @@ public class DataFragment extends Fragment {
 
         ImageView upView;
         ImageView downView;
+        ImageView commentView;
 
         public DataViewHolderType1(View itemView) {
             super(itemView);
@@ -362,6 +378,7 @@ public class DataFragment extends Fragment {
             recyclerView = itemView.findViewById(R.id.recycler_view);
             upView = itemView.findViewById(R.id.up);
             downView = itemView.findViewById(R.id.down);
+            commentView = itemView.findViewById(R.id.comment);
         }
     }
 
