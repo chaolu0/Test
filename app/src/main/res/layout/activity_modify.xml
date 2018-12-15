@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <EditText
+        android:layout_marginTop="30dp"
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_below="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/item_divider_color" />
+    <TextView
+        android:id="@+id/hint"
+        android:layout_below="@+id/line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_below="@+id/hint"
+        android:background="@drawable/selector_lar_button"
+        android:text="@string/finish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

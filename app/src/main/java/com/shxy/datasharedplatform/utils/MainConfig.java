@@ -10,5 +10,11 @@ import android.content.SharedPreferences;
 public class MainConfig {
 
     public static final String MAIN_SP_FILE = "sp_main";
-    public static final String MAIN_URL = "http://172.30.129.1:8080/";
+    public static final String IMG_KEY = "img_key";
+    public static final String NICK_NAME_KEY = "nick_name_key";
+    public static final String INFO_KEY = "info_key";
+    public static final String UID_KEY = "uid";
+
+
+    public static final String MAIN_URL = "http://10.102.188.78:8080/";
 }

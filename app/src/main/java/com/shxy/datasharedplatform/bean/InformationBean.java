@@ -25,6 +25,16 @@ public class InformationBean {
     private Integer type;
     private String images;
 
+    private Integer isUp = -1;
+
+    public Integer getIsUp() {
+        return isUp;
+    }
+
+    public void setIsUp(Integer isUp) {
+        this.isUp = isUp;
+    }
+
     public String getImages() {
         return images;
     }
@@ -104,5 +114,10 @@ public class InformationBean {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return  isUp +"," + content+"\n";
     }
 }

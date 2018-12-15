@@ -131,15 +131,19 @@ public class DataFragment extends Fragment {
                 String s = response.body().string();
                 InformationRecv recv = new Gson().fromJson(s, InformationRecv.class);
                 final int newSize = recv.getData().size();//新获取到的数据，用于显示tip
-                recv.getData().addAll(mData);//交换，让新数据显示在上面
-                mData = recv.getData();
-                mAdapter.setmData(mData);
+                if (newSize != 0) {
+                    recv.getData().addAll(mData);//交换，让新数据显示在上面
+                    mData = recv.getData();
+                    mAdapter.setmData(mData);
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         setTip(newSize);
-                        mRefreshLayout.setRefreshing(false);
-                        mAdapter.notifyDataSetChanged();
+                        if (newSize != 0) {
+                            mRefreshLayout.setRefreshing(false);
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
@@ -225,6 +229,7 @@ public class DataFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             View view = inflater.inflate(R.layout.item_data_type2, parent, false);
             DataViewHolderType1 viewHolder = new DataViewHolderType1(view);
+            System.out.println("create view holder");
             return viewHolder;
         }
 
@@ -246,22 +251,30 @@ public class DataFragment extends Fragment {
                 holderType1.comment_countView.setText(bean.getComment_count() + "");
                 holderType1.up_countView.setText(bean.getUp_count() + "");
 //                holderType1.titleView.setText(bean.getNickname());
+
+                if (mData.get(position).getIsUp() == 1) {
+                    holderType1.upView.setImageResource(R.drawable.ic_thumb_up_pink_24dp);
+                } else if (mData.get(position).getIsUp() == 0) {
+                    holderType1.downView.setImageResource(R.drawable.ic_thumb_down_pink_24dp);
+                }else{
+                    holderType1.downView.setImageResource(R.drawable.ic_thumb_down_black_24dp);
+                    holderType1.upView.setImageResource(R.drawable.ic_thumb_up_black_24dp);
+                }
+                holderType1.upView.setTag(R.id.postion, position);
+                holderType1.upView.setTag(R.id.view_holder, holderType1);
+                holderType1.upView.setOnClickListener(listener);
+
+                holderType1.downView.setTag(R.id.postion, position);
+                holderType1.downView.setTag(R.id.view_holder, holderType1);
+                holderType1.downView.setOnClickListener(listener);
+
+                holderType1.commentView.setTag(R.id.postion, position);
+                holderType1.commentView.setOnClickListener(listener);
                 if (getItemViewType(position) == 2) {
                     String[] files = bean.getImages().split("-");
                     GridLayoutManager manager = null;
 
                     manager = new GridLayoutManager(mContext, 3);
-                    holderType1.upView.setTag(R.id.postion, position);
-                    holderType1.upView.setTag(R.id.view_holder, holderType1);
-                    holderType1.upView.setOnClickListener(listener);
-
-                    holderType1.downView.setTag(R.id.postion, position);
-                    holderType1.downView.setTag(R.id.view_holder, holderType1);
-                    holderType1.downView.setOnClickListener(listener);
-
-                    holderType1.commentView.setTag(R.id.postion, position);
-                    holderType1.commentView.setOnClickListener(listener);
-
                     holderType1.recyclerView.setLayoutManager(manager);
 //                    holderType1.recyclerView.addItemDecoration(new RecyclerItemDecoration(10, files.length));
                     holderType1.recyclerView.setAdapter(new Image9Adapter(mContext, Arrays.asList(files)));
@@ -296,7 +309,8 @@ public class DataFragment extends Fragment {
 
             private void sendItemUp(final int up, final View v) {
                 Map<String, String> map = new HashMap<>();
-                map.put("iid", mData.get((Integer) v.getTag(R.id.postion)).getId() + "");
+                final int position = (int) v.getTag(R.id.postion);
+                map.put("iid", mData.get(position).getId() + "");
                 map.put("uid", mContext.getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE).getString("uid", ""));
                 map.put("up", up + "");
                 OkHttpUtils.basePostAsync("item_up", map, new Callback() {
@@ -311,20 +325,29 @@ public class DataFragment extends Fragment {
                                 ((Activity) mContext).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-
+                                        InformationBean bean = mData.get(position);
                                         if (msg.getState() == 1) {
                                             if (up == 0) {
+
+                                                bean.setUp_count(bean.getUp_count() - 1);
+                                                bean.setIsUp(0);
                                                 setUpCount(v, -1);
+//                                                notifyItemChanged(position);
                                                 ((ImageView) v).setImageResource(R.drawable.ic_thumb_down_pink_24dp);
                                             } else {
+                                                bean.setUp_count(bean.getUp_count() + 1);
+//                                                notifyItemChanged(position);
                                                 setUpCount(v, 1);
+                                                bean.setIsUp(1);
                                                 ((ImageView) v).setImageResource(R.drawable.ic_thumb_up_pink_24dp);
                                             }
                                         } else {
                                             if (msg.getUp() == 0) {
+                                                bean.setIsUp(0);
                                                 Toast.makeText(mContext, "您已经踩过", Toast.LENGTH_SHORT).show();
                                                 ((DataViewHolderType1) v.getTag(R.id.view_holder)).downView.setImageResource(R.drawable.ic_thumb_down_pink_24dp);
                                             } else {
+                                                bean.setIsUp(1);
                                                 Toast.makeText(mContext, "您已经赞过", Toast.LENGTH_SHORT).show();
                                                 ((DataViewHolderType1) v.getTag(R.id.view_holder)).upView.setImageResource(R.drawable.ic_thumb_up_pink_24dp);
                                             }
@@ -344,7 +367,7 @@ public class DataFragment extends Fragment {
 
             private void startComment(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("item_id", (Integer) v.getTag(R.id.postion));
+                bundle.putInt("item_id", mData.get((Integer) v.getTag(R.id.postion)).getId());
                 Intent intent = new Intent(mContext, CommentActivity.class);
                 intent.putExtras(bundle);
                 ((Activity) mContext).startActivityForResult(intent, 1);
