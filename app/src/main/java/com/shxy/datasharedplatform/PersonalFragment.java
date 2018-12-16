@@ -4,6 +4,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +14,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.shxy.datasharedplatform.bean.LoginMessage;
+import com.shxy.datasharedplatform.utils.FileUtils;
 import com.shxy.datasharedplatform.utils.MainConfig;
+import com.shxy.datasharedplatform.utils.OkHttpUtils;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by shxy on 2018/12/1.
@@ -45,6 +64,12 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         getProfile();
     }
 
@@ -60,15 +85,80 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.img:
+                selectImages();
                 break;
             case R.id.nickname:
-                Intent intent = ModifyProfile.genarateIntent(getActivity(), "", "", "");
+                intent = ModifyProfile.genarateIntent(getActivity(), "昵称",
+                        sp.getString(MainConfig.NICK_NAME_KEY, getString(R.string.default_name)), "一个好的名字，能够让大家记住你", ModifyProfile.NICKNAME_TYPE);
                 startActivity(intent);
                 break;
-            case R.id.info:
+            case R.id.personal_sign:
+                intent = ModifyProfile.genarateIntent(getActivity(), "个人签名",
+                        sp.getString(MainConfig.INFO_KEY, getString(R.string.default_info)), "最长可以输入24个字的个人签名~", ModifyProfile.INFO_TYPE);
+                startActivity(intent);
                 break;
+        }
+    }
+
+    private final int REQUEST_CODE_CHOOSE = 2;
+
+    private void selectImages() {
+        Matisse.from(this)
+                .choose(MimeType.allOf()) // 选择 mime 的类型
+                .countable(true)
+                .maxSelectable(1) // 图片选择的最多数量
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f) // 缩略图的比例
+                .imageEngine(new GlideEngine()) // 使用的图片加载引擎
+                .forResult(REQUEST_CODE_CHOOSE); // 设置作为标记的请求码
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == getActivity().RESULT_OK) {
+            final List<Uri> mSelected = Matisse.obtainResult(data);
+            if (mSelected.size() == 1) {
+                HashMap<String, String> params = new HashMap<>();
+                SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
+                params.put("uid", sp.getString(MainConfig.UID_KEY, ""));
+                params.put("SK", sp.getString(MainConfig.SK_KEY, ""));
+                HashMap<String, File> files = new HashMap<>();
+                files.put("photo", FileUtils.getFileByUri(mSelected.get(0), getContext()));
+                OkHttpUtils.filePostAsync("upload_photo", params, files, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        final String string = response.body().string();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoginMessage msg = new Gson().fromJson(string, LoginMessage.class);
+                                if (msg.getState() == 1) {
+                                    SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor edit = sp.edit();
+                                    edit.putString(MainConfig.IMG_KEY, msg.getPhoto_path());
+                                    edit.apply();
+                                    Glide.with(PersonalFragment.this)
+                                            .load(mSelected.get(0))
+                                            .into(img);
+                                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), msg.getMsg(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         }
     }
 }

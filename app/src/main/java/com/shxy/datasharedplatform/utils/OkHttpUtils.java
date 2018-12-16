@@ -62,7 +62,7 @@ public class OkHttpUtils {
 //        String TYPE = "application/octet-stream";
         for (Map.Entry<String, File> entry : fileParams.entrySet()) {
             RequestBody body = RequestBody.create(MediaType.parse("image/png"), entry.getValue());
-            mBuilder.addFormDataPart("img", entry.getValue().getName(), body);
+            mBuilder.addFormDataPart(entry.getKey(), entry.getValue().getName(), body);
         }
 
         RequestBody body = mBuilder.build();

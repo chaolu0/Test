@@ -97,6 +97,7 @@ public class DataFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mRecyclerView.scrollToPosition(0);
+                mRefreshLayout.setRefreshing(true);
                 fetchItems();
             }
         });

@@ -7,6 +7,15 @@ package com.shxy.datasharedplatform.bean;
 public class LoginMessage extends BaseMsg{
     private Integer id;
     private String SK;
+    private String photo_path;
+
+    public String getPhoto_path() {
+        return photo_path;
+    }
+
+    public void setPhoto_path(String photo_path) {
+        this.photo_path = photo_path;
+    }
 
     public String getSK() {
         return SK;

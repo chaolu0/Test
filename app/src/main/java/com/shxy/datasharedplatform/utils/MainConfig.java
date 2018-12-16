@@ -13,8 +13,9 @@ public class MainConfig {
     public static final String IMG_KEY = "img_key";
     public static final String NICK_NAME_KEY = "nick_name_key";
     public static final String INFO_KEY = "info_key";
-    public static final String UID_KEY = "uid";
+    public static final String UID_KEY = "uid_key";
+    public static final String SK_KEY = "sk_key";
 
 
-    public static final String MAIN_URL = "http://10.102.188.78:8080/";
+    public static final String MAIN_URL = "http://172.30.126.1:8080/";
 }

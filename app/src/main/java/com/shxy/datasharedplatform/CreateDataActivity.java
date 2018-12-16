@@ -96,7 +96,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
             params.put("count", mData.size() + "");
             Map<String, File> fileParams = new HashMap<>();
             for (int i = 0; i < mData.size(); i++) {
-                fileParams.put("img" + i, FileUtils.getFileByUri(mData.get(i), this));
+                fileParams.put("img", FileUtils.getFileByUri(mData.get(i), this));
             }
             url = "upload_item_type2";
             params.put("type", "2");
