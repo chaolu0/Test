@@ -1,74 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/top_layout"
-        layout="@layout/item_data_type2" />
-
     <TextView
+        android:layout_marginTop="16dp"
         android:id="@+id/no_comment"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:gravity="center"
-        android:text="暂无评论"
-        android:textColor="#000"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="top"
+        android:text="暂无评论,期待你的神评论"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/comment_edit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.ConstraintLayout
+    <EditText
+        android:background="#fff"
+        android:id="@+id/comment_edit"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/btn"
+        android:hint="@string/comment_something"
+        android:padding="5dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_layout">
+        app:layout_constraintRight_toLeftOf="@+id/btn"
+        />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/h_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.7" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/comment_edit"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <EditText
-            android:id="@+id/comment_edit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_toLeftOf="@+id/btn"
-            android:hint="评论一下"
-            android:padding="5dp"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@+id/h_line"
-            app:layout_constraintTop_toTopOf="@+id/h_line" />
-
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发表"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/h_line"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/h_line" />
-    </android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:text="发表"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/selector_send_comment_button"
+        app:layout_constraintBottom_toBottomOf="@+id/comment_edit"
+        app:layout_constraintTop_toTopOf="@+id/comment_edit"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

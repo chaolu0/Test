@@ -12,4 +12,5 @@
     <color name="float_action_button_background">#fafafa</color><!--浮动按钮背景颜色-->
     <color name="logout_button_normal_color">#c41411</color><!--登出按钮正常颜色-->
     <color name="logout_button_selected_color">#b0120a</color><!--登出按钮选中颜色-->
+    <color name="send_comment_button_color">#5677fc</color><!--发表评论按钮颜色-->
 </resources>

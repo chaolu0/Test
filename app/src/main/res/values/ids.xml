@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="postion" type="id"></item>
+    <item name="position" type="id"></item>
     <item name="view_holder" type="id"></item>
+    <item name="bean" type="id"></item>
 </resources>

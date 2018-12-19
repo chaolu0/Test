@@ -1,9 +1,9 @@
 package com.shxy.datasharedplatform.bean;
 
-import java.sql.Date;
+import java.io.Serializable;
 
 
-public class InformationBean {
+public class InformationBean implements Serializable{
 
     private Integer id;
 

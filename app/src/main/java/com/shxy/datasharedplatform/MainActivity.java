@@ -107,9 +107,11 @@ public class MainActivity extends BaseActivity {
         showFragmentByIndex(DATA_FRAGMENT_INDEX);
     }
 
+    private static final int CREATE_DATA_ACTIVITY_REQUEST_CODE = 8;
+
     private void showFragmentByIndex(int index) {
         if (index == 1) {
-            startActivityForResult(new Intent(MainActivity.this, CreateDataActivity.class),1);
+            startActivityForResult(new Intent(MainActivity.this, CreateDataActivity.class), CREATE_DATA_ACTIVITY_REQUEST_CODE);
         } else {
             getSupportFragmentManager().beginTransaction()
                     .hide(mFragments[DATA_FRAGMENT_INDEX])
@@ -122,7 +124,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
+        if (requestCode == CREATE_DATA_ACTIVITY_REQUEST_CODE) {
             mTabLayout.getTabAt(unSelect).select();
         }
     }
