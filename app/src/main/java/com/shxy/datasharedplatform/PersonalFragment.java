@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
     private ImageView img;
     private TextView nickname;
     private TextView info;
+    private Button logoutButton;
 
     @Nullable
     @Override
@@ -59,6 +61,9 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
         img.setOnClickListener(this);
         nickname.setOnClickListener(this);
         info.setOnClickListener(this);
+
+        logoutButton = view.findViewById(R.id.logout);
+        logoutButton.setOnClickListener(this);
     }
 
     @Override
@@ -101,7 +106,18 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                         sp.getString(MainConfig.INFO_KEY, getString(R.string.default_info)), "最长可以输入24个字的个人签名~", ModifyProfile.INFO_TYPE);
                 startActivity(intent);
                 break;
+            case R.id.logout:
+                ((BaseActivity) getActivity()).removeAllActivitys();
+                clearLoginKey();
+                intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                break;
         }
+    }
+
+    private void clearLoginKey() {
+        SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
+        sp.edit().remove(MainConfig.LOGIN_KEY).putBoolean(MainConfig.LOGIN_KEY, false);
     }
 
     private final int REQUEST_CODE_CHOOSE = 2;

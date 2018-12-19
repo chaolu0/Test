@@ -109,6 +109,8 @@ public class LoginActivity extends BaseActivity implements
         SharedPreferences.Editor edit = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).edit();
         edit.putString(MainConfig.UID_KEY, loginMessage.getId() + "");
         edit.putString(MainConfig.SK_KEY, loginMessage.getSK());
+        edit.putString(MainConfig.PWD_KEY, passwordEdit.getText().toString());
+        edit.putBoolean(MainConfig.LOGIN_KEY, true);
         edit.apply();
     }
 

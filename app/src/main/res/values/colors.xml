@@ -10,4 +10,6 @@
     <color name="bottom_tab_normal_selected_color">#0C9EFF</color><!--第一页下面按钮选中颜色-->
     <color name="refresh_tip_background_color">#4dd0e1</color><!--刷新提示框的背景颜色-->
     <color name="float_action_button_background">#fafafa</color><!--浮动按钮背景颜色-->
+    <color name="logout_button_normal_color">#c41411</color><!--登出按钮正常颜色-->
+    <color name="logout_button_selected_color">#b0120a</color><!--登出按钮选中颜色-->
 </resources>
