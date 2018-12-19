@@ -38,7 +38,7 @@ import okhttp3.Response;
 public class CommentActivity extends BaseActivity {
 
     private RecyclerView mRecyclerView;
-    private TextView noComentTextView;
+    private TextView noCommentTextView;
     private EditText commentEditText;
     private Button btn;
     private List<CommentBean> mData = new LinkedList<>();
@@ -51,8 +51,8 @@ public class CommentActivity extends BaseActivity {
         setContentView(R.layout.activity_comment);
         final int itemId = getIntent().getExtras().getInt("item_id");
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        noComentTextView = (TextView) findViewById(R.id.no_comment);
-        noComentTextView.setVisibility(View.GONE);
+        noCommentTextView = (TextView) findViewById(R.id.no_comment);
+        noCommentTextView.setVisibility(View.GONE);
         commentEditText = (EditText) findViewById(R.id.comment_edit);
         btn = (Button) findViewById(R.id.btn);
 
@@ -122,9 +122,9 @@ public class CommentActivity extends BaseActivity {
 
                         mData.addAll(recv.getData());
                         if (mData.size() == 0) {
-                            noComentTextView.setVisibility(View.VISIBLE);
+                            noCommentTextView.setVisibility(View.VISIBLE);
                         } else {
-                            noComentTextView.setVisibility(View.GONE);
+                            noCommentTextView.setVisibility(View.GONE);
                             mAdapter.notifyDataSetChanged();
                         }
                     }

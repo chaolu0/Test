@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:padding="10dp"
+        android:id="@+id/tip"
+        android:textSize="13sp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/selector_refresh_tip"
+        android:textColor="#fff"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="获取32条新帖"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</android.support.constraint.ConstraintLayout>

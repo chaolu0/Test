@@ -27,6 +27,7 @@ import com.shxy.datasharedplatform.bean.InformationRecv;
 import com.shxy.datasharedplatform.bean.RemarkMessage;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
+import com.shxy.datasharedplatform.widget.TopToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,6 @@ public class DataFragment extends Fragment {
     private List<InformationBean> mData = new ArrayList<>();
     private SwipeRefreshLayout mRefreshLayout;
     private int page = 0;
-    private TextView tip;
 
     @Override
     public void onAttach(Context context) {
@@ -78,7 +78,6 @@ public class DataFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRefreshButton = view.findViewById(R.id.floating_action_button);
         mRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
-        tip = view.findViewById(R.id.tip);
     }
 
     @Override
@@ -141,8 +140,8 @@ public class DataFragment extends Fragment {
                     @Override
                     public void run() {
                         setTip(newSize);
+                        mRefreshLayout.setRefreshing(false);
                         if (newSize != 0) {
-                            mRefreshLayout.setRefreshing(false);
                             mAdapter.notifyDataSetChanged();
                         }
                     }
@@ -167,7 +166,6 @@ public class DataFragment extends Fragment {
     public void onStop() {
         super.onStop();
         System.out.println("onStop");
-        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -188,23 +186,15 @@ public class DataFragment extends Fragment {
         System.out.println("onDetach");
     }
 
-    private static final int MSG_TIP_HIDE = 0x01;
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == MSG_TIP_HIDE)
-                tip.setVisibility(View.GONE);
-        }
-    };
 
     private void setTip(int n) {
-        tip.setVisibility(View.VISIBLE);
+        String text;
         if (n == 0) {
-            tip.setText("暂时没有新帖");
+            text = "暂时没有新帖";
         } else {
-            tip.setText("获取" + n + "个新帖");
+            text = "获取" + n + "个新帖";
         }
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TIP_HIDE), 2000);
+        TopToast.setText(getContext(),text,Toast.LENGTH_SHORT).show();
     }
 
     public static class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -257,7 +247,7 @@ public class DataFragment extends Fragment {
                     holderType1.upView.setImageResource(R.drawable.ic_thumb_up_pink_24dp);
                 } else if (mData.get(position).getIsUp() == 0) {
                     holderType1.downView.setImageResource(R.drawable.ic_thumb_down_pink_24dp);
-                }else{
+                } else {
                     holderType1.downView.setImageResource(R.drawable.ic_thumb_down_black_24dp);
                     holderType1.upView.setImageResource(R.drawable.ic_thumb_up_black_24dp);
                 }

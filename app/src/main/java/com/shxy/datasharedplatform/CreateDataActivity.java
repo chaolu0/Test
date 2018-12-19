@@ -1,12 +1,13 @@
 package com.shxy.datasharedplatform;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.shxy.datasharedplatform.utils.FileUtils;
@@ -25,8 +27,6 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,6 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 /**
@@ -68,6 +67,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         mBackView.setOnClickListener(this);
         mAddImageButton.setOnClickListener(this);
         mSendButton.setOnClickListener(this);
+
     }
 
     @Override
@@ -86,7 +86,9 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
     }
 
     private void sendData() {
-
+        if (isUploading)
+            return;
+        isUploading = true;
         String id = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString("uid", "");
         String url = null;
         Map<String, String> params = new HashMap<>();
@@ -109,9 +111,11 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
 
     }
 
+    private boolean isUploading = false;
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
+            isUploading = false;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -123,11 +127,13 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
 
         @Override
         public void onResponse(Call call, final Response response) throws IOException {
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         Toast.makeText(CreateDataActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
+                        isUploading = true;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -205,5 +211,18 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
     }
 
 
-
+    @Override
+    public void onBackPressed() {
+        if (mContent.getText().toString().length() != 0 || mData.size() != 0)
+            new AlertDialog.Builder(this).setTitle("放弃编辑")
+                    .setMessage("退出后内容将不会保留")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CreateDataActivity.super.onBackPressed();
+                        }
+                    }).create().show();
+        else
+            super.onBackPressed();
+    }
 }

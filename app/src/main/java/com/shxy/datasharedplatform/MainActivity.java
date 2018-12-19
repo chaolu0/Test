@@ -52,10 +52,9 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 1)
-                    return;
                 unSelect = tab.getPosition();
                 unSelectView = tab.getCustomView();
+
             }
 
             @Override
@@ -110,7 +109,7 @@ public class MainActivity extends BaseActivity {
 
     private void showFragmentByIndex(int index) {
         if (index == 1) {
-            startActivity(new Intent(MainActivity.this, CreateDataActivity.class));
+            startActivityForResult(new Intent(MainActivity.this, CreateDataActivity.class),1);
         } else {
             getSupportFragmentManager().beginTransaction()
                     .hide(mFragments[DATA_FRAGMENT_INDEX])
@@ -123,5 +122,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            mTabLayout.getTabAt(unSelect).select();
+        }
     }
 }
