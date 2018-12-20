@@ -19,5 +19,5 @@ public class MainConfig {
     public static final String LOGIN_KEY = "login_key";
 
 
-    public static final String MAIN_URL = "http://172.28.144.1:8080/";
+    public static final String MAIN_URL = "http://172.23.85.1:8080/";
 }

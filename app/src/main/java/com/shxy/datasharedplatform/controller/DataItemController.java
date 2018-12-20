@@ -59,8 +59,14 @@ public class DataItemController {
         DataFragment.DataViewHolderType1 holderType1 = (DataFragment.DataViewHolderType1) holder;
         Glide.with(mContext)
                 .load(MainConfig.MAIN_URL + bean.getPhoto_path())
+                .error(R.mipmap.ic_launcher)
                 .into(holderType1.photoVIew);
-        holderType1.nicknameView.setText(bean.getNickname());
+        String nick = bean.getNickname();
+        if (nick.length() == 0) {
+            holderType1.nicknameView.setText(mContext.getString(R.string.default_name));
+        } else {
+            holderType1.nicknameView.setText(bean.getNickname());
+        }
         if (bean.getContent().length() == 0) {//没内容就隐藏
             holderType1.contentView.setVisibility(View.GONE);
         } else {

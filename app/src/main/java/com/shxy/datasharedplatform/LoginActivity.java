@@ -107,10 +107,16 @@ public class LoginActivity extends BaseActivity implements
 
     private void saveInfo(LoginMessage loginMessage) {
         SharedPreferences.Editor edit = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).edit();
-        edit.putString(MainConfig.UID_KEY, loginMessage.getId() + "");
-        edit.putString(MainConfig.SK_KEY, loginMessage.getSK());
+        edit.remove(MainConfig.INFO_KEY).remove(MainConfig.NICK_NAME_KEY).remove(MainConfig.IMG_KEY)
+                .remove(MainConfig.UID_KEY).remove(MainConfig.SK_KEY).remove(MainConfig.PWD_KEY);
+        edit.putString(MainConfig.UID_KEY, loginMessage.getUser().getId() + "");
+        edit.putString(MainConfig.SK_KEY, loginMessage.getUser().getSK());
+        edit.putString(MainConfig.NICK_NAME_KEY, loginMessage.getUser().getNickName());
+        edit.putString(MainConfig.IMG_KEY, loginMessage.getUser().getPhoto_path());
+        edit.putString(MainConfig.INFO_KEY, loginMessage.getUser().getPersonal_sign());
         edit.putString(MainConfig.PWD_KEY, passwordEdit.getText().toString());
         edit.putBoolean(MainConfig.LOGIN_KEY, true);
+
         edit.apply();
     }
 

@@ -49,6 +49,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
     private View mBackView;
     private GridAdapter mAdapter;
     private List<Uri> mData = new ArrayList<>();
+    private boolean subSuccess = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         if (isUploading)
             return;
         isUploading = true;
-        String id = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString("uid", "");
+        String id = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString(MainConfig.UID_KEY, "");
         String url = null;
         Map<String, String> params = new HashMap<>();
         params.put("content", mContent.getText().toString());
@@ -133,7 +134,8 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
                 public void run() {
                     try {
                         Toast.makeText(CreateDataActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
-                        isUploading = true;
+                        isUploading = false;
+                        subSuccess = true;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -213,7 +215,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        if (mContent.getText().toString().length() != 0 || mData.size() != 0)
+        if (!subSuccess && (mContent.getText().toString().length() != 0 || mData.size() != 0))
             new AlertDialog.Builder(this).setTitle("放弃编辑")
                     .setMessage("退出后内容将不会保留")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {

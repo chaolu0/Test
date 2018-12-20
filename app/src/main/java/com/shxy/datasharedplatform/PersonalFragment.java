@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.shxy.datasharedplatform.bean.LoginMessage;
+import com.shxy.datasharedplatform.bean.UploadPhotoMessage;
 import com.shxy.datasharedplatform.utils.FileUtils;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
@@ -117,7 +118,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
 
     private void clearLoginKey() {
         SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
-        sp.edit().remove(MainConfig.LOGIN_KEY).putBoolean(MainConfig.LOGIN_KEY, false);
+        sp.edit().remove(MainConfig.LOGIN_KEY).putBoolean(MainConfig.LOGIN_KEY, false).apply();
     }
 
     private final int REQUEST_CODE_CHOOSE = 2;
@@ -157,7 +158,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                LoginMessage msg = new Gson().fromJson(string, LoginMessage.class);
+                                UploadPhotoMessage msg = new Gson().fromJson(string, UploadPhotoMessage.class);
                                 if (msg.getState() == 1) {
                                     SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor edit = sp.edit();

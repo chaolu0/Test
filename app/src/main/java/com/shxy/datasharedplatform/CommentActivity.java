@@ -87,7 +87,7 @@ public class CommentActivity extends BaseActivity {
     private void upComment(final int itemId) {
         Map<String, String> map = new HashMap<>(3);
         map.put("iid", itemId + "");
-        map.put("uid", getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString("uid", ""));
+        map.put("uid", getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString(MainConfig.UID_KEY, ""));
         map.put("comment", commentEditText.getText().toString());
         OkHttpUtils.basePostAsync("upload_comment", map, new Callback() {
             @Override
