@@ -145,6 +145,7 @@ public class DataFragment extends Fragment {
                         }
                     }
                 });
+                response.body().close();
             }
         });
     }

@@ -111,9 +111,15 @@ public class LoginActivity extends BaseActivity implements
                 .remove(MainConfig.UID_KEY).remove(MainConfig.SK_KEY).remove(MainConfig.PWD_KEY);
         edit.putString(MainConfig.UID_KEY, loginMessage.getUser().getId() + "");
         edit.putString(MainConfig.SK_KEY, loginMessage.getUser().getSK());
-        edit.putString(MainConfig.NICK_NAME_KEY, loginMessage.getUser().getNickName());
-        edit.putString(MainConfig.IMG_KEY, loginMessage.getUser().getPhoto_path());
-        edit.putString(MainConfig.INFO_KEY, loginMessage.getUser().getPersonal_sign());
+        if (!loginMessage.getUser().getNickName().equals("")) {
+            edit.putString(MainConfig.NICK_NAME_KEY, loginMessage.getUser().getNickName());
+        }
+        if (!loginMessage.getUser().getPhoto_path().equals("")) {
+            edit.putString(MainConfig.IMG_KEY, loginMessage.getUser().getPhoto_path());
+        }
+        if (!loginMessage.getUser().getPersonal_sign().equals("")) {
+            edit.putString(MainConfig.INFO_KEY, loginMessage.getUser().getPersonal_sign());
+        }
         edit.putString(MainConfig.PWD_KEY, passwordEdit.getText().toString());
         edit.putBoolean(MainConfig.LOGIN_KEY, true);
 

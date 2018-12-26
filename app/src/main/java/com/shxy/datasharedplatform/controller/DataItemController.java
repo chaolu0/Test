@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.shxy.datasharedplatform.CommentActivity;
 import com.shxy.datasharedplatform.DataFragment;
 import com.shxy.datasharedplatform.R;
+import com.shxy.datasharedplatform.RecyclerItemDecoration;
 import com.shxy.datasharedplatform.bean.InformationBean;
 import com.shxy.datasharedplatform.bean.RemarkMessage;
 import com.shxy.datasharedplatform.utils.MainConfig;
@@ -104,11 +105,12 @@ public class DataItemController {
 
             manager = new GridLayoutManager(mContext, 3);
             holderType1.recyclerView.setLayoutManager(manager);
-//                    holderType1.recyclerView.addItemDecoration(new RecyclerItemDecoration(10, files.length));
+            holderType1.recyclerView.addItemDecoration(itemDecoration);
             holderType1.recyclerView.setAdapter(new DataFragment.Image9Adapter(mContext, Arrays.asList(files)));
         }
     }
 
+    private RecyclerView.ItemDecoration itemDecoration = new RecyclerItemDecoration(5, 0, 3);
     private boolean disableComment = false;
 
     /**

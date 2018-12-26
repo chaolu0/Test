@@ -118,7 +118,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
 
     private void clearLoginKey() {
         SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
-        sp.edit().remove(MainConfig.LOGIN_KEY).putBoolean(MainConfig.LOGIN_KEY, false).apply();
+        sp.edit().remove(MainConfig.LOGIN_KEY)
+                .remove(MainConfig.UID_KEY).putBoolean(MainConfig.LOGIN_KEY, false).apply();
     }
 
     private final int REQUEST_CODE_CHOOSE = 2;

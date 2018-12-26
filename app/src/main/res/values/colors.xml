@@ -13,4 +13,5 @@
     <color name="logout_button_normal_color">#c41411</color><!--登出按钮正常颜色-->
     <color name="logout_button_selected_color">#b0120a</color><!--登出按钮选中颜色-->
     <color name="send_comment_button_color">#5677fc</color><!--发表评论按钮颜色-->
+    <color name="up_dialog_background_color">#e0e0e0</color>
 </resources>

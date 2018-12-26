@@ -1,5 +1,6 @@
 package com.shxy.datasharedplatform;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
     private GridAdapter mAdapter;
     private List<Uri> mData = new ArrayList<>();
     private boolean subSuccess = false;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +61,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         mContent = (EditText) findViewById(R.id.content);
         mRecyclerView = (RecyclerView) findViewById(R.id.img_recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(10, 3));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(10, 0, 3));
         mAdapter = new GridAdapter(this, mData);
         mRecyclerView.setAdapter(mAdapter);
         mAddImageButton = findViewById(R.id.add_img);
@@ -68,8 +70,17 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         mBackView.setOnClickListener(this);
         mAddImageButton.setOnClickListener(this);
         mSendButton.setOnClickListener(this);
-
+        initProgressDialog();
     }
+
+    private void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setTitle("正在上传...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -86,6 +97,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+
     private void sendData() {
         if (isUploading)
             return;
@@ -95,6 +107,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         Map<String, String> params = new HashMap<>();
         params.put("content", mContent.getText().toString());
         params.put("id", id);
+        progressDialog.show();
         if (mData.size() > 0) {
             params.put("count", mData.size() + "");
             Map<String, File> fileParams = new HashMap<>();
@@ -120,6 +133,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    progressDialog.dismiss();
                     Toast.makeText(CreateDataActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -133,6 +147,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void run() {
                     try {
+                        progressDialog.dismiss();
                         Toast.makeText(CreateDataActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
                         isUploading = false;
                         subSuccess = true;

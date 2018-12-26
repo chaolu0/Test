@@ -8,21 +8,22 @@
 
 
     <ImageView
-        android:padding="5dp"
         android:id="@+id/back"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
-        android:layout_margin="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="发表"
         android:padding="5dp"
+        android:text="发表"
         android:textColor="@color/bottom_tab_normal_selected_color"
         android:textSize="16sp"
         app:layout_constraintRight_toRightOf="parent"
@@ -54,10 +55,10 @@
                 app:layout_constraintTop_toBottomOf="parent" />
 
             <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="20dp"
                 android:id="@+id/img_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/content" />
@@ -66,9 +67,9 @@
 
     <LinearLayout
         android:id="@+id/add_img"
-        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="10dp"
@@ -89,6 +90,31 @@
             android:text="照片/视频"
             android:textColor="@color/bottom_tab_normal_selected_color"
             android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:padding="20dp"
+        android:background="@color/up_dialog_background_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:padding="10dp"
+            android:text="正在上传..."
+            android:textColor="#000"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ProgressBar
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
 

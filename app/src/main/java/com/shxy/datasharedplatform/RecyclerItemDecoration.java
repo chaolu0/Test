@@ -9,26 +9,33 @@ import android.view.View;
  */
 
 public class RecyclerItemDecoration extends RecyclerView.ItemDecoration {
-    private int itemSpace;
+    private int topSpace;
     private int itemNum;
+    private int leftSpace;
 
     /**
-     * @param itemSpace item间隔
+     * @param topSpace item间隔
      * @param itemNum   每行item的个数
      */
-    public RecyclerItemDecoration(int itemSpace, int itemNum) {
-        this.itemSpace = itemSpace;
+    public RecyclerItemDecoration(int topSpace, int leftSpace,int itemNum) {
+        this.topSpace = topSpace;
         this.itemNum = itemNum;
+        this.leftSpace = leftSpace;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.bottom = itemSpace;
+        outRect.bottom = topSpace;
         if (parent.getChildLayoutPosition(view) % itemNum == 0) {  //parent.getChildLayoutPosition(view) 获取view的下标
             outRect.left = 0;
         } else {
-            outRect.left = itemSpace;
+            outRect.left = leftSpace;
+        }
+        if (parent.getChildLayoutPosition(view) / itemNum == 0) {
+            outRect.top = 0;
+        } else {
+            outRect.top = topSpace;
         }
 
     }
