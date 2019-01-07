@@ -83,7 +83,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
         SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
         Glide.with(this)
                 .load(MainConfig.MAIN_URL + sp.getString(MainConfig.IMG_KEY, ""))
-                .error(R.mipmap.ic_launcher)
+//                .error(R.mipmap.ic_launcher)
                 .into(img);
         nickname.setText(sp.getString(MainConfig.NICK_NAME_KEY, getString(R.string.default_name)));
         info.setText(sp.getString(MainConfig.INFO_KEY, getString(R.string.default_info)));
@@ -126,7 +126,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
 
     private void selectImages() {
         Matisse.from(this)
-                .choose(MimeType.allOf()) // 选择 mime 的类型
+                .choose(MimeType.ofImage()) // 选择 mime 的类型
+                .showSingleMediaType(true)
                 .countable(true)
                 .maxSelectable(1) // 图片选择的最多数量
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)

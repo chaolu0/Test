@@ -195,7 +195,7 @@ public class CommentActivity extends BaseActivity {
                         .load(MainConfig.MAIN_URL + mData.get(position).getPhoto_path())
                         .into(commentViewHolder.img);
             } else {
-                controller.bindViewHolderType1AndType2(bean, position, holder, bean.getType());
+                controller.bindViewHolder(bean, position, holder, bean.getType());
             }
         }
 

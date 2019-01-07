@@ -24,6 +24,15 @@ public class InformationBean implements Serializable{
 
     private Integer type;
     private String images;
+    private String video;
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
 
     private Integer isUp = -1;
 

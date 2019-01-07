@@ -225,7 +225,7 @@ public class DataFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             InformationBean bean = mData.get(position);
-            controller.bindViewHolderType1AndType2(bean, position, holder, getItemViewType(position));
+            controller.bindViewHolder(bean, position, holder, getItemViewType(position));
         }
 
         @Override
@@ -261,7 +261,21 @@ public class DataFragment extends Fragment {
             commentView = itemView.findViewById(R.id.comment);
         }
     }
+    public static class DataViewHolderType2 extends DataViewHolderType1{
+        public RecyclerView recyclerView;
+        public DataViewHolderType2(View itemView) {
+            super(itemView);
+            recyclerView = itemView.findViewById(R.id.recycler_view);
+        }
+    }
+    public static class DataViewHolderType3 extends DataViewHolderType1 {
 
+        public ImageView video;
+        public DataViewHolderType3(View itemView) {
+            super(itemView);
+            video = itemView.findViewById(R.id.video);
+        }
+    }
 
     //九宫格图片适配器
     public static class Image9Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -66,6 +66,7 @@
     </ScrollView>
 
     <LinearLayout
+        android:background="@drawable/selector_border"
         android:id="@+id/add_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,11 +88,37 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="照片/视频"
+            android:text="照片"
             android:textColor="@color/bottom_tab_normal_selected_color"
             android:textSize="16sp" />
     </LinearLayout>
+    <LinearLayout
+        android:background="@drawable/selector_border"
+        android:id="@+id/add_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/add_img">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_videocam_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="视频"
+            android:textColor="@color/bottom_tab_normal_selected_color"
+            android:textSize="16sp" />
+    </LinearLayout>
     <LinearLayout
         android:visibility="gone"
         android:padding="20dp"

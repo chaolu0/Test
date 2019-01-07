@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.shxy.datasharedplatform.CommentActivity;
 import com.shxy.datasharedplatform.DataFragment;
@@ -40,7 +43,8 @@ import okhttp3.Response;
  * 只在dataFragment和CommentActivity中使用
  */
 public class DataItemController {
-    private ClickListener listener = new ClickListener();
+    private ItemButtonClickListener itemButtonClickListener = new ItemButtonClickListener();
+    private VideoClickListener videoClickListener = new VideoClickListener();
     private Context mContext;
 
     public DataItemController(Context mContext) {
@@ -49,18 +53,38 @@ public class DataItemController {
 
     public RecyclerView.ViewHolder createViewHolder(ViewGroup parent, int type) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.item_data_type2, parent, false);
-        DataFragment.DataViewHolderType1 viewHolder = new DataFragment.DataViewHolderType1(view);
-        System.out.println("create view holder");
+        View view = null;
+        RecyclerView.ViewHolder viewHolder = null;
+        if (type == 1) {
+            view = inflater.inflate(R.layout.item_data_type2, parent, false);
+            viewHolder = new DataFragment.DataViewHolderType1(view);
+        } else if (type == 2) {
+            view = inflater.inflate(R.layout.item_data_type2, parent, false);
+            viewHolder = new DataFragment.DataViewHolderType2(view);
+        } else {
+            view = inflater.inflate(R.layout.item_data_type3, parent, false);
+            viewHolder = new DataFragment.DataViewHolderType3(view);
+        }
+//        System.out.println("create view holder");
         return viewHolder;
     }
 
-    public void bindViewHolderType1AndType2(InformationBean bean, int position,
-                                            RecyclerView.ViewHolder holder, int type) {
+    public void bindViewHolder(InformationBean bean, int position,
+                               RecyclerView.ViewHolder holder, int type) {
+        bindViewHolderType1(bean, position, holder);
+        if (type == 2) {
+            bindViewHolderType2(bean, position, holder);
+        }
+        if (type == 3) {
+            bindViewHolderType3(bean, position, holder);
+        }
+    }
+
+    private void bindViewHolderType1(InformationBean bean, int position,
+                                     RecyclerView.ViewHolder holder) {
         DataFragment.DataViewHolderType1 holderType1 = (DataFragment.DataViewHolderType1) holder;
         Glide.with(mContext)
                 .load(MainConfig.MAIN_URL + bean.getPhoto_path())
-                .error(R.mipmap.ic_launcher)
                 .into(holderType1.photoVIew);
         String nick = bean.getNickname();
         if (nick.length() == 0) {
@@ -89,25 +113,42 @@ public class DataItemController {
         holderType1.upView.setTag(R.id.position, position);
         holderType1.upView.setTag(R.id.view_holder, holderType1);
         holderType1.upView.setTag(R.id.bean, bean);
-        holderType1.upView.setOnClickListener(listener);
+        holderType1.upView.setOnClickListener(itemButtonClickListener);
 
         holderType1.downView.setTag(R.id.position, position);
         holderType1.downView.setTag(R.id.view_holder, holderType1);
         holderType1.downView.setTag(R.id.bean, bean);
-        holderType1.downView.setOnClickListener(listener);
+        holderType1.downView.setOnClickListener(itemButtonClickListener);
 
         holderType1.commentView.setTag(R.id.position, position);
         holderType1.commentView.setTag(R.id.bean, bean);
-        holderType1.commentView.setOnClickListener(listener);
-        if (type == 2) {
-            String[] files = bean.getImages().split("-");
-            GridLayoutManager manager = null;
+        holderType1.commentView.setOnClickListener(itemButtonClickListener);
+    }
 
-            manager = new GridLayoutManager(mContext, 3);
-            holderType1.recyclerView.setLayoutManager(manager);
-            holderType1.recyclerView.addItemDecoration(itemDecoration);
-            holderType1.recyclerView.setAdapter(new DataFragment.Image9Adapter(mContext, Arrays.asList(files)));
-        }
+    private void bindViewHolderType2(InformationBean bean, int position,
+                                     RecyclerView.ViewHolder holder) {
+        DataFragment.DataViewHolderType2 holderType2 = (DataFragment.DataViewHolderType2) holder;
+        String[] files = bean.getImages().split("-");
+        GridLayoutManager manager = null;
+        manager = new GridLayoutManager(mContext, 3);
+        holderType2.recyclerView.setLayoutManager(manager);
+        holderType2.recyclerView.addItemDecoration(itemDecoration);
+        holderType2.recyclerView.setAdapter(new DataFragment.Image9Adapter(mContext, Arrays.asList(files)));
+    }
+
+    private void bindViewHolderType3(InformationBean bean, int position,
+                                     RecyclerView.ViewHolder holder) {
+        DataFragment.DataViewHolderType3 holderType3 = (DataFragment.DataViewHolderType3) holder;
+        System.out.println("*" + MainConfig.MAIN_URL + bean.getVideo());
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.DATA);
+        Glide.with(mContext)
+                .load(MainConfig.MAIN_URL + bean.getVideo())
+                .apply(options)
+                .into(holderType3.video);
+        holderType3.video.setTag(R.id.bean, bean);
+        holderType3.video.setOnClickListener(videoClickListener);
     }
 
     private RecyclerView.ItemDecoration itemDecoration = new RecyclerItemDecoration(5, 0, 3);
@@ -120,7 +161,7 @@ public class DataItemController {
         disableComment = true;
     }
 
-    public class ClickListener implements View.OnClickListener {
+    private class ItemButtonClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -206,6 +247,17 @@ public class DataItemController {
             Intent intent = new Intent(mContext, CommentActivity.class);
             intent.putExtras(bundle);
             ((Activity) mContext).startActivityForResult(intent, 1);
+        }
+    }
+
+    private class VideoClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            InformationBean  bean = (InformationBean) v.getTag(R.id.bean);
+            Intent intent = new Intent();
+            intent.putExtra("video_path",bean.getVideo());
+//            mContext.startActivity();
         }
     }
 }

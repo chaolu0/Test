@@ -38,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
     <View
+        android:id="@+id/line"
         android:layout_width="0dp"
         android:layout_height="1sp"
         android:layout_alignParentBottom="true"
@@ -46,6 +47,43 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/personal_sign" />
 
+    <TextView
+        android:layout_marginTop="10dp"
+        android:text="帖子数"
+        android:textColor="#000"
+        android:id="@+id/item_count_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line"
+        app:layout_constraintRight_toLeftOf="@+id/up_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginTop="10dp"
+        android:text="获赞数"
+        android:textColor="#000"
+        android:id="@+id/up_count_text"
+        app:layout_constraintLeft_toRightOf="@+id/item_count_text"
+        app:layout_constraintTop_toBottomOf="@+id/line"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="0"
+        android:id="@+id/item_count"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_count_text"
+        app:layout_constraintRight_toLeftOf="@+id/up_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="1"
+        android:id="@+id/up_count"
+        app:layout_constraintLeft_toRightOf="@+id/item_count"
+        app:layout_constraintTop_toBottomOf="@+id/item_count_text"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/logout"
         android:layout_width="0dp"
