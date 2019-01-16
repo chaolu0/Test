@@ -121,8 +121,9 @@ public class LoginActivity extends BaseActivity implements
             edit.putString(MainConfig.INFO_KEY, loginMessage.getUser().getPersonal_sign());
         }
         edit.putString(MainConfig.PWD_KEY, passwordEdit.getText().toString());
+        edit.putString(MainConfig.UP_COUNT_KEY, loginMessage.getUser().getUpCount() + "");
+        edit.putString(MainConfig.ITEM_COUNT_KEY, loginMessage.getUser().getItemCount() + "");
         edit.putBoolean(MainConfig.LOGIN_KEY, true);
-
         edit.apply();
     }
 

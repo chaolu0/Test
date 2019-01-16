@@ -22,6 +22,7 @@ import com.shxy.datasharedplatform.CommentActivity;
 import com.shxy.datasharedplatform.DataFragment;
 import com.shxy.datasharedplatform.R;
 import com.shxy.datasharedplatform.RecyclerItemDecoration;
+import com.shxy.datasharedplatform.VideoActivity;
 import com.shxy.datasharedplatform.bean.InformationBean;
 import com.shxy.datasharedplatform.bean.RemarkMessage;
 import com.shxy.datasharedplatform.utils.MainConfig;
@@ -254,10 +255,10 @@ public class DataItemController {
 
         @Override
         public void onClick(View v) {
-            InformationBean  bean = (InformationBean) v.getTag(R.id.bean);
-            Intent intent = new Intent();
-            intent.putExtra("video_path",bean.getVideo());
-//            mContext.startActivity();
+            InformationBean bean = (InformationBean) v.getTag(R.id.bean);
+            Intent intent = new Intent(mContext, VideoActivity.class);
+            intent.putExtra("video_path", bean.getVideo());
+            mContext.startActivity(intent);
         }
     }
 }

@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.shxy.datasharedplatform.bean.LoginMessage;
 import com.shxy.datasharedplatform.bean.UploadPhotoMessage;
 import com.shxy.datasharedplatform.utils.FileUtils;
+import com.shxy.datasharedplatform.utils.Glide4Engine;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.zhihu.matisse.Matisse;
@@ -46,6 +47,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
     private TextView nickname;
     private TextView info;
     private Button logoutButton;
+    private TextView upCount;
+    private TextView itemCount;
 
     @Nullable
     @Override
@@ -65,6 +68,9 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
 
         logoutButton = view.findViewById(R.id.logout);
         logoutButton.setOnClickListener(this);
+
+        upCount = view.findViewById(R.id.up_count);
+        itemCount = view.findViewById(R.id.item_count);
     }
 
     @Override
@@ -87,6 +93,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                 .into(img);
         nickname.setText(sp.getString(MainConfig.NICK_NAME_KEY, getString(R.string.default_name)));
         info.setText(sp.getString(MainConfig.INFO_KEY, getString(R.string.default_info)));
+        itemCount.setText(sp.getString(MainConfig.ITEM_COUNT_KEY, "0"));
+        upCount.setText(sp.getString(MainConfig.UP_COUNT_KEY, "0"));
     }
 
     @Override
@@ -132,7 +140,7 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                 .maxSelectable(1) // 图片选择的最多数量
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 .thumbnailScale(0.85f) // 缩略图的比例
-                .imageEngine(new GlideEngine()) // 使用的图片加载引擎
+                .imageEngine(new Glide4Engine()) // 使用的图片加载引擎
                 .forResult(REQUEST_CODE_CHOOSE); // 设置作为标记的请求码
     }
 
@@ -146,9 +154,8 @@ public class PersonalFragment extends Fragment implements View.OnClickListener {
                 SharedPreferences sp = getActivity().getSharedPreferences(MainConfig.MAIN_SP_FILE, Context.MODE_PRIVATE);
                 params.put("uid", sp.getString(MainConfig.UID_KEY, ""));
                 params.put("SK", sp.getString(MainConfig.SK_KEY, ""));
-                HashMap<String, File> files = new HashMap<>();
-                files.put("photo", FileUtils.getFileByUri(mSelected.get(0), getContext()));
-                OkHttpUtils.filePostAsync("upload_photo", params, files, new Callback() {
+                File file = FileUtils.getFileByUri(mSelected.get(0), getContext());
+                OkHttpUtils.filePostSimpleAsync("upload_photo", params,"photo", file, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
 

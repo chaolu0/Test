@@ -54,7 +54,7 @@ public class OkHttpUtils {
     }
 
     public static void filePostAsync(String url, Map<String, String> params,
-                                     Map<String, File> fileParams, Callback callback) {
+                                     Map<String, Map<String, File>> fileParams, Callback callback) {
 
         MultipartBody.Builder mBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -62,9 +62,11 @@ public class OkHttpUtils {
             mBuilder.addFormDataPart(entry.getKey(), entry.getValue());
         }
 //        String TYPE = "application/octet-stream";
-        for (Map.Entry<String, File> entry : fileParams.entrySet()) {
-            RequestBody body = RequestBody.create(MediaType.parse("image/png"), entry.getValue());
-            mBuilder.addFormDataPart(entry.getKey(), entry.getValue().getName(), body);
+        for (Map.Entry<String, Map<String, File>> entry : fileParams.entrySet()) {
+            for (Map.Entry<String, File> e : entry.getValue().entrySet()) {
+                RequestBody body = RequestBody.create(MediaType.parse("image/png"), e.getValue());
+                mBuilder.addFormDataPart(entry.getKey(), e.getKey(), body);
+            }
         }
 
         RequestBody body = mBuilder.build();
@@ -77,9 +79,32 @@ public class OkHttpUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void filePostSimpleAsync(String url, Map<String, String> params,
+                                           String fileParam, File file, Callback callback) {
+
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+//            mBuilder = mBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+            mBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+//        String TYPE = "application/octet-stream";
+
+        RequestBody body1 = RequestBody.create(MediaType.parse("image/png"), file);
+        mBuilder.addFormDataPart(fileParam, file.getName(), body1);
+
+
+        RequestBody body = mBuilder.build();
+        String realUrl = baseUrl + url;
+        Request request = new Request.Builder()
+                .url(realUrl)
+                .post(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(callback);
+    }
 
     public static String filePost(String url, Map<String, String> params,
-                                    Map<String, File> fileParams) {
+                                  Map<String, File> fileParams) {
         MultipartBody.Builder mBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Map.Entry<String, String> entry : params.entrySet()) {
 //            mBuilder = mBuilder.addFormDataPart(entry.getKey(), entry.getValue());

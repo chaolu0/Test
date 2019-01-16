@@ -1,5 +1,7 @@
 package com.shxy.datasharedplatform.bean;
 
+import android.content.Intent;
+
 public class UserBean {
 
     private Integer id;
@@ -15,6 +17,25 @@ public class UserBean {
     private String nickName;
 
     private String personal_sign;
+
+    private Integer upCount;
+    private Integer itemCount;
+
+    public Integer getItemCount() {
+        return itemCount;
+    }
+
+    public void setItemCount(Integer itemCount) {
+        this.itemCount = itemCount;
+    }
+
+    public Integer getUpCount() {
+        return upCount;
+    }
+
+    public void setUpCount(Integer upCount) {
+        this.upCount = upCount;
+    }
 
     public String getNickName() {
         return nickName;

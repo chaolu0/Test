@@ -113,6 +113,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
         String id = getSharedPreferences(MainConfig.MAIN_SP_FILE, MODE_PRIVATE).getString(MainConfig.UID_KEY, "");
         String url = null;
         Map<String, String> params = new HashMap<>();
+        Map<String,Map<String,File>> m = new HashMap<>();
         params.put("content", mContent.getText().toString());
         params.put("id", id);
         progressDialog.show();
@@ -122,18 +123,21 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
                 params.put("type", "2");
                 Map<String, File> fileParams = new HashMap<>();
                 for (int i = 0; i < mData.size(); i++) {
-                    fileParams.put("img", FileUtils.getFileByUri(mData.get(i), this));
+                    File file = FileUtils.getFileByUri(mData.get(i), this);
+                    fileParams.put(file.getName(), FileUtils.getFileByUri(mData.get(i), this));
                 }
                 url = "upload_item_type2";
 
-                OkHttpUtils.filePostAsync(url, params, fileParams, callback);
+                m.put("img",fileParams);
+                OkHttpUtils.filePostAsync(url, params, m, callback);
                 break;
             case REQUEST_CODE_VIDEO:
                 params.put("type", "3");
                 Map<String, File> fileParam = new HashMap<>();
                 fileParam.put("video", FileUtils.getFileByUri(mData.get(0), this));
                 url = "upload_item_type3";
-                OkHttpUtils.filePostAsync(url, params, fileParam, callback);
+                m.put("img",fileParam);
+                OkHttpUtils.filePostAsync(url, params, m, callback);
                 break;
             case REQUEST_CODE_TEXT:
                 url = "upload_item";
@@ -249,7 +253,7 @@ public class CreateDataActivity extends BaseActivity implements View.OnClickList
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Glide.with(mContext).load(mList.get(position)).into(((GridViewHolder)holder).img);
+            Glide.with(mContext).load(mList.get(position)).into(((GridViewHolder) holder).img);
 //            ((GridViewHolder) holder).img.setImageURI(mList.get(position));
         }
 
