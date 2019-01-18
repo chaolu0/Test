@@ -27,6 +27,7 @@ import com.shxy.datasharedplatform.controller.DataItemController;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
 import com.shxy.datasharedplatform.widget.TopToast;
+import com.shxy.imgloader.ImgLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -321,5 +322,35 @@ public class DataFragment extends Fragment {
         }
     }
 
+    public static class Image9AdapterCopy extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        private List<String> mList;
+        private Context mContext;
+
+        public Image9AdapterCopy(Context mContext, List<String> mList) {
+            this.mContext = mContext;
+            this.mList = mList;
+        }
+
+        public void setmList(List<String> mList) {
+            this.mList = mList;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(mContext).inflate(R.layout.grid_img_item, parent, false);
+            return new Image9ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            ImgLoader.with(mContext).url(MainConfig.MAIN_URL + mList.get(position))
+                    .into(((Image9ViewHolder) holder).img);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mList.size();
+        }
+    }
 }
