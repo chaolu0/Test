@@ -3,4 +3,5 @@
     <item name="position" type="id"></item>
     <item name="view_holder" type="id"></item>
     <item name="bean" type="id"></item>
+    <item name="urls" type="id"></item>
 </resources>

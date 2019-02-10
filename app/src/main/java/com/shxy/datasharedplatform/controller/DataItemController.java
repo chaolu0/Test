@@ -134,7 +134,7 @@ public class DataItemController {
         manager = new GridLayoutManager(mContext, 3);
         holderType2.recyclerView.setLayoutManager(manager);
         holderType2.recyclerView.addItemDecoration(itemDecoration);
-        holderType2.recyclerView.setAdapter(new DataFragment.Image9AdapterCopy(mContext, Arrays.asList(files)));
+        holderType2.recyclerView.setAdapter(new DataFragment.Image9Adapter(mContext, Arrays.asList(files)));
     }
 
     private void bindViewHolderType3(InformationBean bean, int position,

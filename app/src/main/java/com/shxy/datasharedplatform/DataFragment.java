@@ -26,10 +26,12 @@ import com.shxy.datasharedplatform.bean.RemarkMessage;
 import com.shxy.datasharedplatform.controller.DataItemController;
 import com.shxy.datasharedplatform.utils.MainConfig;
 import com.shxy.datasharedplatform.utils.OkHttpUtils;
+import com.shxy.datasharedplatform.widget.ImagesActivity;
 import com.shxy.datasharedplatform.widget.TopToast;
 import com.shxy.imgloader.ImgLoader;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -220,7 +222,7 @@ public class DataFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return controller.createViewHolder(parent,viewType);
+            return controller.createViewHolder(parent, viewType);
         }
 
         @Override
@@ -262,16 +264,20 @@ public class DataFragment extends Fragment {
             commentView = itemView.findViewById(R.id.comment);
         }
     }
-    public static class DataViewHolderType2 extends DataViewHolderType1{
+
+    public static class DataViewHolderType2 extends DataViewHolderType1 {
         public RecyclerView recyclerView;
+
         public DataViewHolderType2(View itemView) {
             super(itemView);
             recyclerView = itemView.findViewById(R.id.recycler_view);
         }
     }
+
     public static class DataViewHolderType3 extends DataViewHolderType1 {
 
         public ImageView video;
+
         public DataViewHolderType3(View itemView) {
             super(itemView);
             video = itemView.findViewById(R.id.video);
@@ -283,10 +289,12 @@ public class DataFragment extends Fragment {
 
         private List<String> mList;
         private Context mContext;
+        private ImageOnClickListener mListener;
 
         public Image9Adapter(Context mContext, List<String> mList) {
             this.mContext = mContext;
             this.mList = mList;
+            mListener = new ImageOnClickListener();
         }
 
         public void setmList(List<String> mList) {
@@ -304,6 +312,10 @@ public class DataFragment extends Fragment {
             Glide.with(mContext)
                     .load(MainConfig.MAIN_URL + mList.get(position))
                     .into(((Image9ViewHolder) holder).img);
+            View v = ((Image9ViewHolder) holder).img;
+            v.setTag(R.id.urls, mList);
+            v.setTag(R.id.position, position);
+            v.setOnClickListener(mListener);
         }
 
         @Override
@@ -351,6 +363,17 @@ public class DataFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mList.size();
+        }
+    }
+
+    public static class ImageOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), ImagesActivity.class);
+            intent.putExtra("currentIndex", (int) (v.getTag(R.id.position)))
+                    .putExtra("images", (Serializable) (v.getTag(R.id.urls)));
+            v.getContext().startActivity(intent);
         }
     }
 }
